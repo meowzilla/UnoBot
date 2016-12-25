@@ -150,6 +150,9 @@ public class UnoBot extends ListenerAdapter {
             extreme = false;
             gameUp = false;
             delt = false;
+//            for (Player p : players) {
+//              bot.sendRaw().rawLine("MODE " + gameChannel + " -v " + p.getName());
+//            }
             players.clear();
             bot.sendIRC().message(gameChannel,"This game is taking too long to start so I'm stopping it.");
             if(botAI){
@@ -248,7 +251,7 @@ public class UnoBot extends ListenerAdapter {
             extreme = false;
             bot.sendIRC().message(channel, Colors.BOLD + Colors.UNDERLINE + Colors.TEAL + player.getName() + " has won the match!!!!");
             int points;
-            for (Player p : this.players) {
+            for (Player p : players) {
                 points = p.points();
                 if (points == 0) {
                     points = players.pointSum();
@@ -285,10 +288,10 @@ public class UnoBot extends ListenerAdapter {
             }
             gameUp = false;
             delt = false;
-            players.clear();
-            for (Player p : this.players) {
-              bot.sendIRC().mode(p.getName(), "-v");
+            for (Player p : players) {
+              bot.sendRaw().rawLine("MODE " + channel + " -v " + p.getName());
             }
+            players.clear();
             deck.clear();
 
         }
@@ -303,7 +306,7 @@ public class UnoBot extends ListenerAdapter {
                 player.draw(deck, 7);
             }
             bot.sendIRC().message(channel, name + " has joined.");
-            bot.sendIRC().mode(name, "+v");
+            bot.sendRaw().rawLine("MODE " + channel + " +v " + name);
         } else {
             bot.sendIRC().message(channel, name + ", you are already in the player list.");
         }
@@ -317,7 +320,7 @@ public class UnoBot extends ListenerAdapter {
                 if (players.size()>0){
                     players.next();
                     bot.sendIRC().message(channel, name + " has quit the game.");
-                    bot.sendIRC().mode(name, "-v");
+                    bot.sendRaw().rawLine("MODE " + channel + " -v " + name);
                 }
                 else{
                     if(delt){
@@ -331,10 +334,8 @@ public class UnoBot extends ListenerAdapter {
                     extreme = false;
                     gameUp = false;
                     delt = false;
+                    bot.sendRaw().rawLine("MODE " + channel + " -v " + name);
                     players.clear();
-                    for (Player p : this.players) {
-                      bot.sendIRC().mode(p.getName(), "-v");
-                    }
                     bot.sendIRC().message(channel, name + " was the last player in the game, the game has ended");
                     if(botAI){
                         bot2.stopBotReconnect();
@@ -361,9 +362,7 @@ public class UnoBot extends ListenerAdapter {
                     gameUp = false;
                     delt = false;
                     players.clear();
-                    for (Player p : this.players) {
-                      bot.sendIRC().mode(p.getName(), "-v");
-                    }
+                    bot.sendRaw().rawLine("MODE " + channel + " -v " + name);
                     bot.sendIRC().message(channel, name + " was the last player in the game, the game has ended");
                     if(botAI){
                         bot2.stopBotReconnect();
@@ -633,10 +632,10 @@ public class UnoBot extends ListenerAdapter {
                         extreme = false;
                         gameUp = false;
                         delt = false;
-                        players.clear();
-                        for (Player p : this.players) {
-                          bot.sendIRC().mode(p.getName(), "-v");
+                        for (Player p : players) {
+                          bot.sendRaw().rawLine("MODE " + channel + " -v " + p.getName());
                         }
+                        players.clear();
                         bot.sendIRC().message(channel, "The game was ended by " + sender);
                         if(botAI){
                             bot2.stopBotReconnect();
